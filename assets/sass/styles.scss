@@ -1,0 +1,40 @@
+/*
+ * SASS SMACSS boilerplate v1.0
+ * Inspired by Jonathan Snook : http://smacss.com
+ * Author: @maxime beaudoin
+ * Date: May 11 2014
+ *
+ * Doc : https://github.com/justinmwatts/SMACSS // http://smacss.com
+ */
+
+
+/* TOOL */
+// @import "tool/site-settings";
+
+
+/* BASE */
+@import "base/normalize";
+@import "base/base";
+// @import "base/form";
+
+/* FONTS */
+//@import "fonts/...";
+
+/* LAYOUT */
+// @import "layout/grid";
+// @import "layout/header";
+// @import "layout/nav";
+// @import "layout/aside";
+// @import "layout/main";
+// @import "layout/footer";
+
+/* MODULE */
+// @import "module/btn";
+// @import "module/icons";
+// @import "module/animations";
+
+/* STATE */
+// @import "state/state";
+
+/* THEME */
+// @import "theme/theme";
