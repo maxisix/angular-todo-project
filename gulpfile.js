@@ -14,7 +14,8 @@ var gulp = require('gulp'),
 	plumber = require('gulp-plumber'),
 	gcmq = require('gulp-group-css-media-queries'),
 	svgstore = require('gulp-svgstore'),
-	svgmin = require('gulp-svgmin');
+	svgmin = require('gulp-svgmin'),
+	browserify = require('gulp-browserify');
 
 
 
@@ -23,18 +24,35 @@ var gulp = require('gulp'),
 FILE DESTINATIONS (RELATIVE TO ASSSETS FOLDER)
 *******************************************************************************/
 
-var target = {
-	main_sass_src : './assets/sass/styles.scss',
-    sass_src : './assets/sass/**/*.scss',                  // all sass files
-    css_dest : './assets/css',                          // where to put minified css
-    js_src : './assets/js/*.js',						// all js files
-    js_dest : './assets/js/min',                        // where to put minified js
-	img_src : './assets/images/*.{png,jpg,gif}',		// all img files
-	img_dest : './assets/images/min',					// where to put minified img
-	svg_src : './assets/images/svg/*.svg',
-	svg_dest : './assets'
+var root_paths = {
+
+	app : './app/',
+
+	assets : './assets/'
+
 };
 
+
+var target = {
+
+	main_sass_src : root_paths.assets + 'sass/styles.scss',
+    sass_src : root_paths.assets + 'sass/**/*.scss',                  // all sass files
+    css_dest : root_paths.assets + 'css',                          // where to put minified css
+
+    js_src : root_paths.assets + 'js/*.js',						// all js files
+    js_dest : root_paths.assets + 'js/min',                        // where to put minified js
+
+	img_src : root_paths.assets + 'images/*.{png,jpg,gif}',		// all img files
+	img_dest : root_paths.assets + 'images/min',					// where to put minified img
+
+	svg_src : root_paths.assets + 'images/svg/*.svg',
+	svg_dest : root_paths.assets,
+
+	angularjs_main_src : root_paths.app + 'app.module.js',
+	angularjs_src : root_paths.app + '**/*.js',
+	angularjs_dest : root_paths.app
+
+};
 
 
 
@@ -66,15 +84,38 @@ gulp.task('styles', function() {
 JS TASK
 *******************************************************************************/
 
-gulp.task('scripts', function() {
-	return gulp.src(target.js_src)
+// gulp.task('scripts', function() {
+// 	return gulp.src(target.angularjs_main_src)
+// 		.pipe(plumber())
+// 		// .pipe(jshint())
+// 		// .pipe(jshint.reporter(stylish))
+// 		.pipe(concat('scripts.min.js'))
+// 		// .pipe(uglify())
+// 		.pipe(gulp.dest(target.js_dest))
+// 		.pipe(notify('Scripts task completed'));
+// });
+
+
+
+
+
+/*******************************************************************************
+angularJS TASK
+*******************************************************************************/
+
+gulp.task('angularJS', function() {
+	return gulp.src(target.angularjs_main_src)
+		.pipe(browserify({
+    		insertGlobals: true,
+    		debug: true
+  		}))
 		.pipe(plumber())
-		.pipe(jshint())
-		.pipe(jshint.reporter(stylish))
+		// .pipe(jshint())
+		// .pipe(jshint.reporter(stylish))
 		.pipe(concat('scripts.min.js'))
-		.pipe(uglify())
-		.pipe(gulp.dest(target.js_dest))
-		.pipe(notify('Scripts task completed'));
+		// .pipe(uglify())
+		.pipe(gulp.dest(target.angularjs_dest))
+		.pipe(notify('angularJS task completed'));
 });
 
 
@@ -132,6 +173,6 @@ WATCH TASK
 gulp.task('watch', function() {
 
 	gulp.watch(target.sass_src, ['styles']);		// Watch .scss files
-	gulp.watch(target.js_src, ['scripts']);			// Watch .js files
+	gulp.watch(target.angularjs_src, ['angularJS']);			// Watch .js files
 
 });
